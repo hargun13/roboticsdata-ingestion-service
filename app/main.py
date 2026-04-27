@@ -51,7 +51,16 @@ def create_telemetry(telemetry: schemas.TelemetryCreate, db: Session = Depends(g
     db.refresh(db_telemetry)
     return db_telemetry
 
-
-# endpoint 3: querying the data
-
-# endpoint 4: 
+# endpoint 3: querying the data (for the researchers)
+@app.get("/telemetry/{equipment_id}", response_model=List[schemas.TelemetryResponse])
+def get_telemetry(equipment_id: int, limit: int = 100, db: Session = Depends(get_db)):
+    
+    # Query the database for this specific robot's data, ordered by the newest first.
+    # Because we added that composite index in models.py, this query is lightning fast!
+    readings = db.query(models.Telemetry)\
+                 .filter(models.Telemetry.equipment_id == equipment_id)\
+                 .order_by(models.Telemetry.timestamp.desc())\
+                 .limit(limit)\
+                 .all()
+    
+    return readings
