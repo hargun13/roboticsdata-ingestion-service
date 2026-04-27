@@ -21,9 +21,9 @@ def get_db():
 # endpoint 1: register new equipment
 @app.post("/equipment/", response_model=schemas.EquipmentResponse)
 def create_equipment(equipment: schemas.EquipmentCreate, db: Session = Depends(get_db)):
-    
     # 1. Pydantic validation done
     # 2. We convert the Pydantic schema into a SQLAlchemy Database Model
+    # equipment.model_dump() converts the Pydantic model into a dictionary, and ** unpacks that dictionary into keyword arguments for the SQLAlchemy model constructor
     db_equipment = models.Equipment(**equipment.model_dump())
     
     # 3. We add it to the database workspace, commit it to the hard drive, and refresh the object to get its new ID.
