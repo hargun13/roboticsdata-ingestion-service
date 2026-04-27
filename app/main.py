@@ -21,7 +21,7 @@ def get_db():
 
 @app.get("/")
 def read_root():
-    return {"status": "online", "message": "Welcome to the MFI Digital Data Backbone API"}
+    return {"status": "online", "message": "Welcome to the Robotics Telemetry API"}
 
 # endpoint 1: register new equipment
 @app.post("/equipment/", response_model=schemas.EquipmentResponse)
