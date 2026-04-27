@@ -23,7 +23,7 @@ class EquipmentResponse(BaseModel):
     location: Optional[str] = None
     created_at: datetime
 
-    class Config:
+    class ConfigDict:
         # this tells pydantic to read data from the ORM models directly
         from_attributes = True
 
@@ -34,5 +34,5 @@ class TelemetryResponse(BaseModel):
     value: float
     timestamp: datetime
 
-    class Config:
+    class ConfigDict:
         from_attributes = True
