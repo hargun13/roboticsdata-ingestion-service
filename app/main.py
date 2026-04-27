@@ -18,6 +18,11 @@ def get_db():
     finally:
         db.close()
 
+
+@app.get("/")
+def read_root():
+    return {"status": "online", "message": "Welcome to the MFI Digital Data Backbone API"}
+
 # endpoint 1: register new equipment
 @app.post("/equipment/", response_model=schemas.EquipmentResponse)
 def create_equipment(equipment: schemas.EquipmentCreate, db: Session = Depends(get_db)):
