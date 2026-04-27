@@ -35,7 +35,21 @@ def create_equipment(equipment: schemas.EquipmentCreate, db: Session = Depends(g
     return db_equipment
 
 # endpoint 2: ingest telemetry data
-
+@app.post("/telemetry/", response_model=schemas.TelemetryResponse)
+def create_telemetry(telemetry: schemas.TelemetryCreate, db: Session = Depends(get_db)):
+    
+    # Security check: Does this robot actually exist in our database?
+    equipment = db.query(models.Equipment).filter(models.Equipment.id == telemetry.equipment_id).first()
+    if not equipment:
+        # If not, FastAPI instantly returns a 404 Not Found error to the robot.
+        raise HTTPException(status_code=404, detail="Equipment not found")
+    
+    # Save the telemetry point
+    db_telemetry = models.Telemetry(**telemetry.model_dump())
+    db.add(db_telemetry)
+    db.commit()
+    db.refresh(db_telemetry)
+    return db_telemetry
 
 
 # endpoint 3: querying the data
